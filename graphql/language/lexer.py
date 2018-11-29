@@ -191,11 +191,20 @@ def read_token(source, from_position):
             return read_number(source, position, code)
 
         elif code == 34:  # "
+            if (
+                char_code_at(body, position + 1) == 34 and
+                char_code_at(body, position + 2) == 34
+            ):
+                return read_block_string(source, position)
             return read_string(source, position)
 
     raise GraphQLSyntaxError(
         source, position, u"Unexpected character {}.".format(print_char_code(code))
     )
+
+
+def read_block_string(source, from_position):
+    pass
 
 
 ignored_whitespace_characters = frozenset(

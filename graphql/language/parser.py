@@ -696,12 +696,19 @@ def parse_scalar_type_definition(parser):
     )
 
 
+def parse_description(parser):
+    if peek(parser, TokenKind.STRING) or peek(parser, TokenKind.BLOCK_STRING):
+        return parse_value_literal(parser)
+
+
 def parse_object_type_definition(parser):
     # type: (Parser) -> ObjectTypeDefinition
     start = parser.token.start
+    description = parse_description(parser)
     expect_keyword(parser, "type")
     return ast.ObjectTypeDefinition(
         name=parse_name(parser),
+        description=description,
         interfaces=parse_implements_interfaces(parser),
         directives=parse_directives(parser),
         fields=any(
