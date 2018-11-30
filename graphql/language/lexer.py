@@ -203,10 +203,6 @@ def read_token(source, from_position):
     )
 
 
-def read_block_string(source, from_position):
-    pass
-
-
 ignored_whitespace_characters = frozenset(
     [
         # BOM
@@ -424,6 +420,56 @@ def read_string(source, start):
 
     append(body[chunk_start:position])
     return Token(TokenKind.STRING, start, position + 1, u"".join(value))
+
+
+def read_block_string(source, from_position):
+    body = source.body
+    position = from_position + 3
+
+    chunk_start = position
+    code = 0    # type: Optional[int]
+    value = []  # type: List[str]
+
+    while (
+        position < len(body) and
+        code = char_code_at(body, position)) is not None
+    ):
+        # Closing triple quote
+        if (
+            code == 34 and
+            code_char_at(body, position + 1) == 34 and
+            code_char_at(body, position + 2) == 34 and
+        ):
+            value.append(body[chunk_start:position - 1])
+            return Token(
+                TokenKind.BLOCK_STRING,
+                start,
+                position + 3,
+                block_string_value(value), # TODO
+            )
+
+        if code < 0x0020 and code not in (0x0009, 0x000a, 0x000d):
+            raise GraphQLSyntaxError(
+                source,
+                position,
+                "Invalid character within str: %s." % print_char_code(code),
+            )
+
+        # Escaped triple quote (\""")
+        if (
+            code == 92 and
+            char_code_at(body, position + 1) == 34 and
+            char_code_at(body, position + 2) == 34 and
+            char_code_at(body, position + 3) == 34
+        ):
+            value.append(body[chunk_start, position] + '"""')
+            position += 4
+            chunk_start = position
+        else:
+            position += 1
+
+    raise GraphQLSyntaxError(source, position, "Unterminated string")
+
 
 
 def uni_char_code(a, b, c, d):
