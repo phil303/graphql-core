@@ -1,4 +1,5 @@
 import json
+import textwrap
 
 from six import unichr
 
@@ -430,10 +431,9 @@ def read_block_string(source, from_position):
     code = 0    # type: Optional[int]
     value = []  # type: List[str]
 
-    while (
-        position < len(body) and
-        code = char_code_at(body, position)) is not None
-    ):
+    while position < len(body) and code is not None:
+        code = char_code_at(body, position)
+
         # Closing triple quote
         if (
             code == 34 and
@@ -445,7 +445,7 @@ def read_block_string(source, from_position):
                 TokenKind.BLOCK_STRING,
                 start,
                 position + 3,
-                block_string_value(value), # TODO
+                textwrap.dedent(u"".join(value)),
             )
 
         if code < 0x0020 and code not in (0x0009, 0x000a, 0x000d):
