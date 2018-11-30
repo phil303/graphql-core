@@ -56,6 +56,10 @@ class Lexer(object):
         self.prev_position = token.end
         return token
 
+    def look_ahead(self):
+        skip_token = read_token(self.source, self.prev_position)
+        return read_token(self.source, skip_token.start)
+
 
 class TokenKind(object):
     EOF = 1
@@ -77,6 +81,7 @@ class TokenKind(object):
     INT = 17
     FLOAT = 18
     STRING = 19
+    BLOCK_STRING = 20
 
 
 def get_token_desc(token):
@@ -112,6 +117,7 @@ TOKEN_DESCRIPTION = {
     TokenKind.INT: "Int",
     TokenKind.FLOAT: "Float",
     TokenKind.STRING: "String",
+    TokenKind.BLOCK_STRING: "Block string",
 }
 
 
@@ -156,7 +162,7 @@ def read_token(source, from_position):
 
     This skips over whitespace and comments until it finds the next lexable
     token, then lexes punctuators immediately or calls the appropriate
-    helper fucntion for more complicated tokens."""
+    helper function for more complicated tokens."""
     body = source.body
     body_length = len(body)
 
@@ -437,13 +443,13 @@ def read_block_string(source, from_position):
         # Closing triple quote
         if (
             code == 34 and
-            code_char_at(body, position + 1) == 34 and
-            code_char_at(body, position + 2) == 34 and
+            char_code_at(body, position + 1) == 34 and
+            char_code_at(body, position + 2) == 34
         ):
             value.append(body[chunk_start:position - 1])
             return Token(
                 TokenKind.BLOCK_STRING,
-                start,
+                from_position,
                 position + 3,
                 textwrap.dedent(u"".join(value)),
             )

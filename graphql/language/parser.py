@@ -140,6 +140,10 @@ def peek(parser, kind):
     return parser.token.kind == kind
 
 
+def peek_description(parser):
+    return peek(parser, TokenKind.STRING) or peek(parser, TokenKind.BLOCK_STRING)
+
+
 def skip(parser, kind):
     # type: (Parser, int) -> bool
     """If the next token is of the given kind, return true after advancing
@@ -254,6 +258,9 @@ def parse_definition(parser):
     if peek(parser, TokenKind.BRACE_L):
         return parse_operation_definition(parser)
 
+    if peek_description(parser):
+        return parse_type_system_definition(parser)
+
     if peek(parser, TokenKind.NAME):
         name = parser.token.value
 
@@ -275,6 +282,11 @@ def parse_definition(parser):
             return parse_type_system_definition(parser)
 
     raise unexpected(parser)
+
+
+def parse_description(parser):
+    if peek_description(parser):
+        return parse_value_literal(parser, False)
 
 
 # Implements the parsing rules in the Operations section.
@@ -494,6 +506,12 @@ def parse_value_literal(parser, is_const):
             value=token.value, loc=loc(parser, token.start)
         )
 
+    elif token.kind == TokenKind.BLOCK_STRING:
+        advance(parser)
+        return ast.StringValue(  # type: ignore
+            value=token.value, loc=loc(parser, token.start)
+        )
+
     elif token.kind == TokenKind.NAME:
         if token.value in ("true", "false"):
             advance(parser)
@@ -624,10 +642,10 @@ def parse_type_system_definition(parser):
       - EnumTypeDefinition
       - InputObjectTypeDefinition
     """
-    if not peek(parser, TokenKind.NAME):
-        raise unexpected(parser)
-
-    name = parser.token.value
+    if peek_description(parser):
+        name = parser.lexer.look_ahead().value
+    else:
+        name = parser.token.value
 
     if name == "schema":
         return parse_schema_definition(parser)
@@ -694,11 +712,6 @@ def parse_scalar_type_definition(parser):
         directives=parse_directives(parser),
         loc=loc(parser, start),
     )
-
-
-def parse_description(parser):
-    if peek(parser, TokenKind.STRING) or peek(parser, TokenKind.BLOCK_STRING):
-        return parse_value_literal(parser)
 
 
 def parse_object_type_definition(parser):

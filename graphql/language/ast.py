@@ -989,13 +989,14 @@ class OperationTypeDefinition(Node):
 
 
 class ObjectTypeDefinition(TypeDefinition):
-    __slots__ = ("loc", "name", "interfaces", "directives", "fields")
+    __slots__ = ("loc", "name", "interfaces", "directives", "fields", "description")
     _fields = ("name", "interfaces", "fields")
 
     def __init__(
         self,
         name,  # type: Name
         fields,  # type: List[FieldDefinition]
+        description=None,   # type: String
         interfaces=None,  # type: Optional[List[NamedType]]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
@@ -1006,6 +1007,7 @@ class ObjectTypeDefinition(TypeDefinition):
         self.interfaces = interfaces
         self.fields = fields
         self.directives = directives
+        self.description = description
 
     def __eq__(self, other):
         # type: (Any) -> bool
