@@ -706,9 +706,11 @@ def parse_scalar_type_definition(parser):
     # type: (Parser) -> ScalarTypeDefinition
     start = parser.token.start
     expect_keyword(parser, "scalar")
+    description = parse_description(parser)
 
     return ast.ScalarTypeDefinition(
         name=parse_name(parser),
+        description=description,
         directives=parse_directives(parser),
         loc=loc(parser, start),
     )
@@ -749,9 +751,11 @@ def parse_implements_interfaces(parser):
 def parse_field_definition(parser):
     # type: (Parser) -> FieldDefinition
     start = parser.token.start
+    description = parse_description(parser)
 
     return ast.FieldDefinition(  # type: ignore
         name=parse_name(parser),
+        description=description,
         arguments=parse_argument_defs(parser),
         type=expect(parser, TokenKind.COLON) and parse_type(parser),
         directives=parse_directives(parser),
@@ -770,9 +774,11 @@ def parse_argument_defs(parser):
 def parse_input_value_def(parser):
     # type: (Parser) -> InputValueDefinition
     start = parser.token.start
+    description = parse_description(parser)
 
     return ast.InputValueDefinition(  # type: ignore
         name=parse_name(parser),
+        description=description,
         type=expect(parser, TokenKind.COLON) and parse_type(parser),
         default_value=parse_const_value(parser)
         if skip(parser, TokenKind.EQUALS)
@@ -785,10 +791,12 @@ def parse_input_value_def(parser):
 def parse_interface_type_definition(parser):
     # type: (Parser) -> InterfaceTypeDefinition
     start = parser.token.start
+    description = parse_description(parser)
     expect_keyword(parser, "interface")
 
     return ast.InterfaceTypeDefinition(
         name=parse_name(parser),
+        description=description,
         directives=parse_directives(parser),
         fields=any(
             parser, TokenKind.BRACE_L, parse_field_definition, TokenKind.BRACE_R
@@ -800,10 +808,12 @@ def parse_interface_type_definition(parser):
 def parse_union_type_definition(parser):
     # type: (Parser) -> UnionTypeDefinition
     start = parser.token.start
+    description = parse_description(parser)
     expect_keyword(parser, "union")
 
     return ast.UnionTypeDefinition(  # type: ignore
         name=parse_name(parser),
+        description=description,
         directives=parse_directives(parser),
         types=expect(parser, TokenKind.EQUALS) and parse_union_members(parser),
         loc=loc(parser, start),
@@ -826,10 +836,12 @@ def parse_union_members(parser):
 def parse_enum_type_definition(parser):
     # type: (Parser) -> EnumTypeDefinition
     start = parser.token.start
+    description = parse_description(parser)
     expect_keyword(parser, "enum")
 
     return ast.EnumTypeDefinition(
         name=parse_name(parser),
+        description=description,
         directives=parse_directives(parser),
         values=many(
             parser, TokenKind.BRACE_L, parse_enum_value_definition, TokenKind.BRACE_R
@@ -841,9 +853,11 @@ def parse_enum_type_definition(parser):
 def parse_enum_value_definition(parser):
     # type: (Parser) -> EnumValueDefinition
     start = parser.token.start
+    description = parse_description(parser)
 
     return ast.EnumValueDefinition(
         name=parse_name(parser),
+        description=description,
         directives=parse_directives(parser),
         loc=loc(parser, start),
     )
@@ -852,10 +866,12 @@ def parse_enum_value_definition(parser):
 def parse_input_object_type_definition(parser):
     # type: (Parser) -> InputObjectTypeDefinition
     start = parser.token.start
+    description = parse_description(parser)
     expect_keyword(parser, "input")
 
     return ast.InputObjectTypeDefinition(
         name=parse_name(parser),
+        description=description,
         directives=parse_directives(parser),
         fields=any(parser, TokenKind.BRACE_L, parse_input_value_def, TokenKind.BRACE_R),
         loc=loc(parser, start),
@@ -875,6 +891,7 @@ def parse_type_extension_definition(parser):
 def parse_directive_definition(parser):
     # type: (Parser) -> DirectiveDefinition
     start = parser.token.start
+    description = parse_description(parser)
     expect_keyword(parser, "directive")
     expect(parser, TokenKind.AT)
 
@@ -884,7 +901,11 @@ def parse_directive_definition(parser):
 
     locations = parse_directive_locations(parser)
     return ast.DirectiveDefinition(
-        name=name, locations=locations, arguments=args, loc=loc(parser, start)
+        name=name,
+        description=description,
+        locations=locations,
+        arguments=args,
+        loc=loc(parser, start),
     )
 
 

@@ -996,7 +996,7 @@ class ObjectTypeDefinition(TypeDefinition):
         self,
         name,  # type: Name
         fields,  # type: List[FieldDefinition]
-        description=None,   # type: String
+        description=None,  # type: Optional[String]
         interfaces=None,  # type: Optional[List[NamedType]]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
@@ -1044,7 +1044,7 @@ class ObjectTypeDefinition(TypeDefinition):
 
 
 class FieldDefinition(Node):
-    __slots__ = ("loc", "name", "arguments", "type", "directives")
+    __slots__ = ("loc", "name", "arguments", "type", "directives", "description")
     _fields = ("name", "arguments", "type")
 
     def __init__(
@@ -1052,6 +1052,7 @@ class FieldDefinition(Node):
         name,  # type: Name
         arguments,  # type: List[InputValueDefinition]
         type,  # type: Union[NamedType, NonNullType, ListType]
+        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List]
     ):
@@ -1061,6 +1062,7 @@ class FieldDefinition(Node):
         self.arguments = arguments
         self.type = type
         self.directives = directives
+        self.description = description
 
     def __eq__(self, other):
         # type: (Any) -> bool
@@ -1096,13 +1098,14 @@ class FieldDefinition(Node):
 
 
 class InputValueDefinition(Node):
-    __slots__ = ("loc", "name", "type", "default_value", "directives")
+    __slots__ = ("loc", "name", "type", "default_value", "directives", "description")
     _fields = ("name", "type", "default_value")
 
     def __init__(
         self,
         name,  # type: Name
         type,  # type: Union[NamedType, NonNullType, ListType]
+        description=None,  # type: Optional[String]
         default_value=None,  # type: Any
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List]
@@ -1113,6 +1116,7 @@ class InputValueDefinition(Node):
         self.type = type
         self.default_value = default_value
         self.directives = directives
+        self.description = description
 
     def __eq__(self, other):
         # type: (Any) -> bool
@@ -1149,13 +1153,14 @@ class InputValueDefinition(Node):
 
 
 class InterfaceTypeDefinition(TypeDefinition):
-    __slots__ = ("loc", "name", "fields", "directives")
+    __slots__ = ("loc", "name", "fields", "directives", "description")
     _fields = ("name", "fields")
 
     def __init__(
         self,
         name,  # type: Name
         fields,  # type: List[FieldDefinition]
+        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
     ):
@@ -1164,6 +1169,7 @@ class InterfaceTypeDefinition(TypeDefinition):
         self.name = name
         self.fields = fields
         self.directives = directives
+        self.description = description
 
     def __eq__(self, other):
         # type: (Any) -> bool
@@ -1196,13 +1202,14 @@ class InterfaceTypeDefinition(TypeDefinition):
 
 
 class UnionTypeDefinition(TypeDefinition):
-    __slots__ = ("loc", "name", "types", "directives")
+    __slots__ = ("loc", "name", "types", "directives", "description")
     _fields = ("name", "types")
 
     def __init__(
         self,
         name,  # type: Name
         types,  # type: List[NamedType]
+        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
     ):
@@ -1211,6 +1218,7 @@ class UnionTypeDefinition(TypeDefinition):
         self.name = name
         self.types = types
         self.directives = directives
+        self.description = description
 
     def __eq__(self, other):
         # type: (Any) -> bool
@@ -1243,12 +1251,13 @@ class UnionTypeDefinition(TypeDefinition):
 
 
 class ScalarTypeDefinition(TypeDefinition):
-    __slots__ = ("loc", "name", "directives")
+    __slots__ = ("loc", "name", "directives", "description")
     _fields = ("name",)
 
     def __init__(
         self,
         name,  # type: Name
+        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
     ):
@@ -1256,6 +1265,7 @@ class ScalarTypeDefinition(TypeDefinition):
         self.loc = loc
         self.name = name
         self.directives = directives
+        self.description = description
 
     def __eq__(self, other):
         # type: (Any) -> bool
@@ -1286,13 +1296,14 @@ class ScalarTypeDefinition(TypeDefinition):
 
 
 class EnumTypeDefinition(TypeDefinition):
-    __slots__ = ("loc", "name", "values", "directives")
+    __slots__ = ("loc", "name", "values", "directives", "description")
     _fields = ("name", "values")
 
     def __init__(
         self,
         name,  # type: Name
         values,  # type: List[EnumValueDefinition]
+        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
     ):
@@ -1301,6 +1312,7 @@ class EnumTypeDefinition(TypeDefinition):
         self.name = name
         self.values = values
         self.directives = directives
+        self.description = description
 
     def __eq__(self, other):
         # type: (Any) -> bool
@@ -1333,12 +1345,13 @@ class EnumTypeDefinition(TypeDefinition):
 
 
 class EnumValueDefinition(Node):
-    __slots__ = ("loc", "name", "directives")
+    __slots__ = ("loc", "name", "directives", "description")
     _fields = ("name",)
 
     def __init__(
         self,
         name,  # type: Name
+        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
     ):
@@ -1346,6 +1359,7 @@ class EnumValueDefinition(Node):
         self.loc = loc
         self.name = name
         self.directives = directives
+        self.description = description
 
     def __eq__(self, other):
         # type: (Any) -> bool
@@ -1376,13 +1390,14 @@ class EnumValueDefinition(Node):
 
 
 class InputObjectTypeDefinition(TypeDefinition):
-    __slots__ = ("loc", "name", "fields", "directives")
+    __slots__ = ("loc", "name", "fields", "directives", "description")
     _fields = ("name", "fields")
 
     def __init__(
         self,
         name,  # type: Name
         fields,  # type: List[InputValueDefinition]
+        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
     ):
@@ -1391,6 +1406,7 @@ class InputObjectTypeDefinition(TypeDefinition):
         self.name = name
         self.fields = fields
         self.directives = directives
+        self.description = description
 
     def __eq__(self, other):
         # type: (Any) -> bool
@@ -1456,13 +1472,14 @@ class TypeExtensionDefinition(TypeSystemDefinition):
 
 
 class DirectiveDefinition(TypeSystemDefinition):
-    __slots__ = ("loc", "name", "arguments", "locations")
+    __slots__ = ("loc", "name", "arguments", "locations", "description")
     _fields = ("name", "locations")
 
     def __init__(
         self,
         name,  # type: Name
         locations,  # type: List[Name]
+        description=None,  # type: Optional[String]
         arguments=None,  # type: Optional[List[InputValueDefinition]]
         loc=None,  # type: Optional[Loc]
     ):
@@ -1471,6 +1488,7 @@ class DirectiveDefinition(TypeSystemDefinition):
         self.locations = locations
         self.loc = loc
         self.arguments = arguments
+        self.description = description
 
     def __eq__(self, other):
         # type: (Any) -> bool
