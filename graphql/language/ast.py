@@ -996,8 +996,8 @@ class ObjectTypeDefinition(TypeDefinition):
         self,
         name,  # type: Name
         fields,  # type: List[FieldDefinition]
-        description=None,  # type: Optional[String]
         interfaces=None,  # type: Optional[List[NamedType]]
+        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
     ):
@@ -1012,8 +1012,7 @@ class ObjectTypeDefinition(TypeDefinition):
     def __eq__(self, other):
         # type: (Any) -> bool
         return self is other or (
-            isinstance(other, ObjectTypeDefinition)
-            and
+            isinstance(other, ObjectTypeDefinition) and
             # self.loc == other.loc and
             self.name == other.name
             and self.interfaces == other.interfaces
@@ -1105,8 +1104,8 @@ class InputValueDefinition(Node):
         self,
         name,  # type: Name
         type,  # type: Union[NamedType, NonNullType, ListType]
-        description=None,  # type: Optional[String]
         default_value=None,  # type: Any
+        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List]
     ):
