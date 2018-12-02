@@ -451,7 +451,8 @@ def read_block_string(source, from_position):
                 TokenKind.BLOCK_STRING,
                 from_position,
                 position + 3,
-                textwrap.dedent(u"".join(value)),
+                # TODO check the strip logic here
+                textwrap.dedent(u"".join(value).strip()),
             )
 
         if code < 0x0020 and code not in (0x0009, 0x000a, 0x000d):
