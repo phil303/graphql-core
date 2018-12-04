@@ -997,9 +997,9 @@ class ObjectTypeDefinition(TypeDefinition):
         name,  # type: Name
         fields,  # type: List[FieldDefinition]
         interfaces=None,  # type: Optional[List[NamedType]]
-        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
+        description=None,  # type: Optional[String]
     ):
         # type: (...) -> None
         self.loc = loc
@@ -1051,9 +1051,9 @@ class FieldDefinition(Node):
         name,  # type: Name
         arguments,  # type: List[InputValueDefinition]
         type,  # type: Union[NamedType, NonNullType, ListType]
-        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List]
+        description=None,  # type: Optional[String]
     ):
         # type: (...) -> None
         self.loc = loc
@@ -1105,9 +1105,9 @@ class InputValueDefinition(Node):
         name,  # type: Name
         type,  # type: Union[NamedType, NonNullType, ListType]
         default_value=None,  # type: Any
-        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List]
+        description=None,  # type: Optional[String]
     ):
         # type: (...) -> None
         self.loc = loc
@@ -1159,9 +1159,9 @@ class InterfaceTypeDefinition(TypeDefinition):
         self,
         name,  # type: Name
         fields,  # type: List[FieldDefinition]
-        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
+        description=None,  # type: Optional[String]
     ):
         # type: (...) -> None
         self.loc = loc
@@ -1208,9 +1208,9 @@ class UnionTypeDefinition(TypeDefinition):
         self,
         name,  # type: Name
         types,  # type: List[NamedType]
-        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
+        description=None,  # type: Optional[String]
     ):
         # type: (...) -> None
         self.loc = loc
@@ -1256,9 +1256,9 @@ class ScalarTypeDefinition(TypeDefinition):
     def __init__(
         self,
         name,  # type: Name
-        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
+        description=None,  # type: Optional[String]
     ):
         # type: (...) -> None
         self.loc = loc
@@ -1302,9 +1302,9 @@ class EnumTypeDefinition(TypeDefinition):
         self,
         name,  # type: Name
         values,  # type: List[EnumValueDefinition]
-        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
+        description=None,  # type: Optional[String]
     ):
         # type: (...) -> None
         self.loc = loc
@@ -1350,9 +1350,9 @@ class EnumValueDefinition(Node):
     def __init__(
         self,
         name,  # type: Name
-        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
+        description=None,  # type: Optional[String]
     ):
         # type: (...) -> None
         self.loc = loc
@@ -1396,9 +1396,9 @@ class InputObjectTypeDefinition(TypeDefinition):
         self,
         name,  # type: Name
         fields,  # type: List[InputValueDefinition]
-        description=None,  # type: Optional[String]
         loc=None,  # type: Optional[Loc]
         directives=None,  # type: Optional[List[Directive]]
+        description=None,  # type: Optional[String]
     ):
         # type: (...) -> None
         self.loc = loc
@@ -1478,9 +1478,9 @@ class DirectiveDefinition(TypeSystemDefinition):
         self,
         name,  # type: Name
         locations,  # type: List[Name]
-        description=None,  # type: Optional[String]
         arguments=None,  # type: Optional[List[InputValueDefinition]]
         loc=None,  # type: Optional[Loc]
+        description=None,  # type: Optional[String]
     ):
         # type: (...) -> None
         self.name = name
