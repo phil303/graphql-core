@@ -1,5 +1,5 @@
+import re
 import json
-import textwrap
 
 from six import unichr
 
@@ -446,13 +446,12 @@ def read_block_string(source, from_position):
             char_code_at(body, position + 1) == 34 and
             char_code_at(body, position + 2) == 34
         ):
-            value.append(body[chunk_start:position - 1])
+            value.append(body[chunk_start:position])
             return Token(
                 TokenKind.BLOCK_STRING,
                 from_position,
                 position + 3,
-                # TODO check the strip logic here
-                textwrap.dedent(u"".join(value).strip()),
+                clean_description(u"".join(value)),
             )
 
         if code < 0x0020 and code not in (0x0009, 0x000a, 0x000d):
@@ -535,3 +534,36 @@ def read_name(source, position):
         end += 1
 
     return Token(TokenKind.NAME, position, end, body[position:end])
+
+
+
+SPLIT_RE = re.compile("\r\n|[\n\r]")
+WHITESPACE_RE = re.compile("(^[ |\t]*)")
+EMPTY_LINE_RE = re.compile("^\s*$")
+
+
+def clean_description(value):
+    lines = SPLIT_RE.split(value)
+
+    common_indent = None
+    for line in lines[1:]:
+        match = WHITESPACE_RE.match(line)
+        indent = len(match.groups()[0])
+
+        if indent < len(line) and (common_indent is None or indent < common_indent):
+            common_indent = indent
+            if common_indent == 0:
+                break
+
+    new_lines = [lines[0]]
+    if common_indent:
+        for line in lines[1:]:
+            new_lines.append(line[common_indent:])
+
+    while len(new_lines) and EMPTY_LINE_RE.match(new_lines[0]):
+        new_lines = new_lines[1:]
+
+    while len(new_lines) and EMPTY_LINE_RE.match(new_lines[-1]):
+        new_lines = new_lines[:-1]
+
+    return '\n'.join(new_lines)
