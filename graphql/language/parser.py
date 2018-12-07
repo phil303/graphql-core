@@ -509,7 +509,9 @@ def parse_value_literal(parser, is_const):
     elif token.kind == TokenKind.BLOCK_STRING:
         advance(parser)
         return ast.StringValue(  # type: ignore
-            value=token.value, loc=loc(parser, token.start)
+            value=token.value,
+            loc=loc(parser, token.start),
+            is_block_string=True,
         )
 
     elif token.kind == TokenKind.NAME:

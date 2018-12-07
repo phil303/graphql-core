@@ -120,9 +120,11 @@ enum Site {
   """
   This is a description of the `DESKTOP` value
   """
+
   DESKTOP
   """This is a description of the `MOBILE` value"""
   MOBILE
+
   "This is a description of the `WEB` value"
   WEB
 }

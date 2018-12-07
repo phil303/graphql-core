@@ -543,13 +543,14 @@ class FloatValue(Value):
 
 
 class StringValue(Value):
-    __slots__ = ("loc", "value")
+    __slots__ = ("loc", "value", "is_block_string")
     _fields = ("value",)
 
-    def __init__(self, value, loc=None):
+    def __init__(self, value, loc=None, is_block_string=False):
         # type: (str, Optional[Loc]) -> None
         self.loc = loc
         self.value = value
+        self.is_block_string = is_block_string
 
     def __eq__(self, other):
         # type: (Any) -> bool

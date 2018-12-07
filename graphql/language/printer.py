@@ -142,8 +142,8 @@ class PrintingVisitor(Visitor):
 
     def leave_StringValue(self, node, key, *args):
         # type: (Any, *Any) -> str
-        if key == 'description':
-            return print_description(node.value)
+        if node.is_block_string:
+            return print_block_string(node.value, key == 'description')
         return json.dumps(node.value)
 
     def leave_BooleanValue(self, node, *args):
@@ -336,13 +336,12 @@ def indent(maybe_str):
     return ""
 
 
-def print_description(value):
+def print_block_string(value, is_description):
     escaped = value.replace('"""', '\\"""')
-    print(value)
-    print('\n' in value)
-    print(value[0] != " ")
+    # is multiline
     if "\n" in value or (value[0] != " " and value[0] != "\t"):
-        print('foo')
-        return '"""\n' + escaped + '\n"""'
-    return value
-
+        if is_description:
+            return '"""\n' + escaped + '\n"""'
+        else:
+            return '  ' + escaped.replace(r'\n', '\n  ')
+    return '"""' + escaped.replace(r'"$', '"\n') + '"""'
