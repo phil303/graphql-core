@@ -337,11 +337,11 @@ def indent(maybe_str):
 
 
 def print_block_string(value, is_description):
+    # TODO: clean this up
     escaped = value.replace('"""', '\\"""')
-    # is multiline
     if "\n" in value or (value[0] != " " and value[0] != "\t"):
         if is_description:
             return '"""\n' + escaped + '\n"""'
         else:
-            return '  ' + escaped.replace(r'\n', '\n  ')
+            return '  ' + indent(escaped)
     return '"""' + escaped.replace(r'"$', '"\n') + '"""'

@@ -555,15 +555,16 @@ def clean_description(value):
             if common_indent == 0:
                 break
 
-    new_lines = [lines[0]]
     if common_indent:
+        new_lines = [lines[0]]
         for line in lines[1:]:
             new_lines.append(line[common_indent:])
+        lines = new_lines
 
-    while len(new_lines) and EMPTY_LINE_RE.match(new_lines[0]):
-        new_lines = new_lines[1:]
+    while len(lines) and EMPTY_LINE_RE.match(lines[0]):
+        lines = lines[1:]
 
-    while len(new_lines) and EMPTY_LINE_RE.match(new_lines[-1]):
-        new_lines = new_lines[:-1]
+    while len(lines) and EMPTY_LINE_RE.match(lines[-1]):
+        lines = lines[:-1]
 
-    return '\n'.join(new_lines)
+    return '\n'.join(lines)
