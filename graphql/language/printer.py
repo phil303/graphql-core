@@ -220,9 +220,15 @@ class PrintingVisitor(Visitor):
 
     def leave_FieldDefinition(self, node, *args):
         # type: (Any, *Any) -> str
+        has_multiline_item = any("\n" in arg for arg in node.arguments)
+        if has_multiline_item:
+            arguments_str = wrap("(\n", indent(join(node.arguments, "\n")), "\n)")
+        else:
+            arguments_str = wrap("(", join(node.arguments, ", "), ")")
+
         definition_str = (
             node.name
-            + wrap("(", join(node.arguments, ", "), ")")
+            + arguments_str
             + ": "
             + node.type
             + wrap(" ", join(node.directives, " "))
@@ -342,5 +348,5 @@ def print_block_string(value, is_description):
         if is_description:
             return '"""\n' + escaped + '\n"""'
         else:
-            return indent(escaped)
+            return '"""\n' + indent(escaped) + '\n"""'
     return '"""' + escaped.replace(r'"$', '"\n') + '"""'

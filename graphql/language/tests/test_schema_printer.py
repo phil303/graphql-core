@@ -53,6 +53,9 @@ of the `Foo` type.
 type Foo implements Bar {
   "Description of the `one` field."
   one: Type
+  """
+  This is a description of the `two` field.
+  """
   two(
     """
     This is a description of the `argument` argument.
