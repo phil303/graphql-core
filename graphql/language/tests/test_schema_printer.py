@@ -123,9 +123,9 @@ extend type Foo {
   seven(argument: [String]): Type
 }
 
-extend type Foo @onType {}
+extend type Foo @onType
 
-type NoFields {}
+type NoFields
 
 """
 This is a description of the `@skip` directive
